@@ -32,7 +32,7 @@ public class Invoice implements IEntity {
     private LocalDateTime dateOfRelease;
     private LocalDateTime dateOfPayment;
 
-    @Formula(value = "(SELECT SUM(p.price * p.stock) from product p where p.invoice_id = id) as billValue")
+    @Formula(value = "(SELECT SUM(p.price * p.stock + (p.price * p.stock * p.tax)) from product p where p.invoice_id = id)")
     private Double billValue;
 
     @OneToMany(mappedBy = "invoice", fetch = FetchType.EAGER)

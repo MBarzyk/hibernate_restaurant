@@ -6,13 +6,16 @@ Rachunek (Invoice) ma pola:
 - dataIGodzinaOpłacenia
 - kwotaNaRachunku (suma wartości produktów)
 - zbiór produktów (relacja bazodanowa - osobna tabela)
+
 Produkt na fakturze (InvoicePosition/Position) ma pola:
 - nazwa
 - cena (netto)
 - kwota podatku
 - ilość (int)
+
 Możliwości aplikacji:
 Stwórz metody które pozwalają na:
+
 - dodawanie rachunku 
 - dodawanie produktów (do rachunku)
 - wydaj fakturę
