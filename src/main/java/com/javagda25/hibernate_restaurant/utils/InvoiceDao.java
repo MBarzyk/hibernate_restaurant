@@ -7,9 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +77,8 @@ public class InvoiceDao {
             }
         }
     }
-    public void handInvoice (Long id) {
+
+    public void handInvoice(Long id) {
         SessionFactory factory = HibernateUtil.getSessionFactory();
         Transaction transaction = null;
         Invoice invoice = null;
@@ -112,15 +111,21 @@ public class InvoiceDao {
         }
     }
 
-    public Double getTotalPaymentsToday () {
+    public Double getTotalPaymentsToday() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<Double> criteriaQuery = cb.createQuery(Double.class);
-            Root<Double> root = criteriaQuery.from(Double.class);
+
+            Root<Invoice> root = criteriaQuery.from(Invoice.class);
+
+            Join<Invoice, Product> join = root.join("productList", JoinType.LEFT);
 
 
             LocalDateTime now = LocalDateTime.now();
-            criteriaQuery.select(cb.sum(root.get("billValue"))).where(cb.between(root.get("dateOfCreation"), now.toLocalDate().atStartOfDay(), now));
+            criteriaQuery.select(cb.sum(
+                    cb.sum(cb.prod(join.get("price"), join.get("stock")),
+                            cb.prod(cb.prod(join.get("price"), join.get("stock")), join.get("tax")))))
+                    .where(cb.between(root.get("dateOfCreation"), now.toLocalDate().atStartOfDay(), now));
 
             return session.createQuery(criteriaQuery).getSingleResult();
         }

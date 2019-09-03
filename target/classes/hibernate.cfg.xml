@@ -10,7 +10,7 @@
         <property name="connection.username">root</property>
         <property name="connection.password">root</property>
         <!-- DB schema will be updated if needed -->
-        <property name="hbm2ddl.auto">create</property>
+        <property name="hbm2ddl.auto">update</property>
         <!--<property name="show_sql">true</property>-->
         <mapping class="com.javagda25.hibernate_restaurant.Invoice"/>
         <mapping class="com.javagda25.hibernate_restaurant.Product"/>
